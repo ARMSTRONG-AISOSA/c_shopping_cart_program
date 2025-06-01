@@ -1,0 +1,25 @@
+||
+||
+||
+Index 1.0
+why was while ((ch = getchar()) != '\n' && ch != EOF); and not just getchar()
+
+Using just getchar() once would only remove a single character from the input buffer. But when invalid input like abc or 12abc is entered, it leaves many characters in the input buffer.
+
+code:
+    while ((ch = getchar()) != '\n' && ch != EOF);
+This loop clears the entire line of leftover characters from the input buffer, one character at a time, until it hits either:
+ * '\n' → newline character (user pressed Enter),
+ * EOF → end-of-file (e.g. Ctrl+D on Linux)
+
+Example:
+If the user enters:
+abc
+    scanf("%f", &price) fails.
+The buffer still contains: 'a', 'b', 'c', '\n'
+If you call just getchar() once, you remove only 'a', and 'b' and 'c' will still mess with future inputs.
+
+So we use a loop to flush everything until the end of the line.
+
+getchar() once = not enough.
+Looping getchar() until '\n' = full cleanup.
